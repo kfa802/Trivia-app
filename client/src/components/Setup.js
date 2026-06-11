@@ -5,6 +5,7 @@ function Setup({ onStart, loading, error, onBack }) {
   const [category, setCategory] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [amount, setAmount] = useState(10);
+  const [timeLimit, setTimeLimit] = useState(15);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -15,7 +16,7 @@ function Setup({ onStart, loading, error, onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onStart(category, difficulty, amount);
+    onStart(category, difficulty, amount, timeLimit);
   };
 
   return (
@@ -30,6 +31,17 @@ function Setup({ onStart, loading, error, onBack }) {
             <option value={10}>10 questions</option>
             <option value={15}>15 questions</option>
             <option value={20}>20 questions</option>
+          </select>
+        </label>
+
+        <label>
+          Time per question
+          <select value={timeLimit} onChange={(e) => setTimeLimit(e.target.value)}>
+            <option value={10}>10 seconds</option>
+            <option value={15}>15 seconds</option>
+            <option value={20}>20 seconds</option>
+            <option value={30}>30 seconds</option>
+            <option value={60}>60 seconds</option>
           </select>
         </label>
 

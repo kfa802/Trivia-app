@@ -44,6 +44,7 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
   const [questions, setQuestions] = useState(existingQuiz ? existingQuiz.questions : [
     { question: '', answers: ['', '', '', ''], correct: 0 }
   ]);
+  const [timeLimit, setTimeLimit] = useState(existingQuiz ? existingQuiz.timeLimit : 15);
   const [currentQ, setCurrentQ] = useState(null);
 
   const updateQuestion = (value) => {
@@ -76,7 +77,7 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
   };
 
   const saveQuiz = async () => {
-    const quiz = { title: quizTitle, questions };
+    const quiz = { title: quizTitle, questions, timeLimit: Number(timeLimit) };
     if (existingQuiz) {
       await fetch(`/api/quizzes/${existingQuiz.id}`, {
         method: 'PUT',
@@ -108,8 +109,23 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
         value={quizTitle}
         onChange={(e) => setQuizTitle(e.target.value)}
         placeholder="Quiz title..."
-        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #ddd', fontSize: '1.2rem', boxSizing: 'border-box', display: 'block', marginBottom: '1rem' }}
+        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #ddd', fontSize: '1.2rem', boxSizing: 'border-box', display: 'block', marginBottom: '8px' }}
       />
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
+        <label style={{ fontSize: '0.9rem', color: '#555', whiteSpace: 'nowrap' }}>Time per question:</label>
+        <select
+          value={timeLimit}
+          onChange={(e) => setTimeLimit(e.target.value)}
+          style={{ padding: '8px 12px', borderRadius: '8px', border: '1.5px solid #ddd', fontSize: '0.9rem', cursor: 'pointer' }}
+        >
+          <option value={10}>10 seconds</option>
+          <option value={15}>15 seconds</option>
+          <option value={20}>20 seconds</option>
+          <option value={30}>30 seconds</option>
+          <option value={60}>60 seconds</option>
+        </select>
+      </div>
 
       {questions.map((q, i) => (
         <div key={i}>

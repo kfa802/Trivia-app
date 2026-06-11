@@ -19,6 +19,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(15);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -52,9 +53,10 @@ function App() {
     }
   };
 
-  const startGame = async (category, difficulty, amount) => {
+  const startGame = async (category, difficulty, amount, limit) => {
     setLoading(true);
     setError('');
+    setTimeLimit(limit);
     try {
       const params = new URLSearchParams({ amount });
       if (category) params.append('category', category);
@@ -168,6 +170,7 @@ function App() {
           total={questions.length}
           score={score}
           onAnswer={handleAnswer}
+          timeLimit={Number(timeLimit)}
         />
       )}
 
