@@ -39,7 +39,7 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
   );
 }
 
-function CreateQuiz({ onBack, existingQuiz }) {
+function CreateQuiz({ onBack, existingQuiz, token }) {
   const [quizTitle, setQuizTitle] = useState(existingQuiz ? existingQuiz.title : '');
   const [questions, setQuestions] = useState(existingQuiz ? existingQuiz.questions : [
     { question: '', answers: ['', '', '', ''], correct: 0 }
@@ -75,26 +75,26 @@ function CreateQuiz({ onBack, existingQuiz }) {
     setCurrentQ(null);
   };
 
-    const saveQuiz = async () => {
-        const quiz = { title: quizTitle, questions };
-        if (existingQuiz) {
-        await fetch(`/api/quizzes/${existingQuiz.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(quiz)
-        });
-        alert('Quiz updated!');
-        } else {
-        const res = await fetch('/api/quizzes', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(quiz)
-        });
-        const data = await res.json();
-        alert(`Quiz saved! ID: ${data.id}`);
-        }
-        onBack();
-    };
+  const saveQuiz = async () => {
+    const quiz = { title: quizTitle, questions };
+    if (existingQuiz) {
+      await fetch(`/api/quizzes/${existingQuiz.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(quiz)
+      });
+      alert('Quiz updated!');
+    } else {
+      const res = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(quiz)
+      });
+      const data = await res.json();
+      alert(`Quiz saved! ID: ${data.id}`);
+    }
+    onBack();
+  };
 
   return (
     <div style={{ width: '700px', maxWidth: '100%', margin: '0 auto', padding: '1rem', boxSizing: 'border-box' }}>

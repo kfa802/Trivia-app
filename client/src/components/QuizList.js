@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function QuizList({ onBack, onSelect, onEdit }) {
+function QuizList({ onBack, onSelect, onEdit, token }) {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchQuizzes = () => {
-    fetch('/api/quizzes')
+    fetch('/api/quizzes', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
       .then((res) => res.json())
       .then((data) => { setQuizzes(data); setLoading(false); })
       .catch(() => setLoading(false));
@@ -16,7 +18,10 @@ function QuizList({ onBack, onSelect, onEdit }) {
   const deleteQuiz = async (id, e) => {
     e.stopPropagation();
     if (!window.confirm('Delete this quiz?')) return;
-    await fetch(`/api/quizzes/${id}`, { method: 'DELETE' });
+    await fetch(`/api/quizzes/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     fetchQuizzes();
   };
 

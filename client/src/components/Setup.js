@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Setup({ onStart, loading, error }) {
+function Setup({ onStart, loading, error, onBack }) {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
   const [difficulty, setDifficulty] = useState('');
@@ -61,7 +61,7 @@ function Setup({ onStart, loading, error }) {
           {loading ? 'Loading...' : 'Start Quiz'}
         </button>
 
-        <button type="button" onClick={() => window.history.back()} 
+        <button type="button" onClick={onBack}
           style={{ marginTop: '10px', background: '#888' }}>
           Back
         </button>
