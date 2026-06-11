@@ -37,16 +37,21 @@ function PlayQuiz({ quiz, onBack }) {
   }
 
   return (
-    <div className="card">
-      <div className="question-meta">
-        <span>{quiz.title}</span>
-        <span>Question {currentIndex + 1} / {quiz.questions.length}</span>
-        <span>Score: {score}</span>
+    <div style={{ width: '700px', maxWidth: '100%', margin: '0 auto', padding: '1rem', boxSizing: 'border-box' }}>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <button onClick={onBack} style={{ background: '#888', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}>
+          ← Back
+        </button>
+        <span style={{ fontWeight: '500', color: '#555' }}>Question {currentIndex + 1} / {quiz.questions.length}</span>
+        <span style={{ fontWeight: '500', color: '#6c63ff' }}>Score: {score}</span>
       </div>
 
-      <h2 className="question-text" style={{ marginTop: '1rem' }}>{question.question}</h2>
+      <div style={{ background: 'white', border: '2px solid #ddd', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '1.3rem', margin: 0 }}>{question.question}</h2>
+      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         {question.answers.map((answer, aIndex) => {
           let bg = COLORS[aIndex];
           if (selected !== null) {
@@ -56,7 +61,7 @@ function PlayQuiz({ quiz, onBack }) {
           }
           return (
             <button key={aIndex} onClick={() => handleAnswer(aIndex)}
-              style={{ background: bg, color: 'white', border: 'none', borderRadius: '10px', padding: '1rem', fontSize: '1rem', cursor: selected !== null ? 'default' : 'pointer', transition: 'background 0.2s' }}>
+              style={{ background: bg, color: 'white', border: 'none', borderRadius: '10px', padding: '20px', fontSize: '1rem', cursor: selected !== null ? 'default' : 'pointer', transition: 'background 0.2s', fontWeight: '500' }}>
               {answer}
             </button>
           );

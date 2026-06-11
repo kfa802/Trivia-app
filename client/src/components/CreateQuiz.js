@@ -39,9 +39,9 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
   );
 }
 
-function CreateQuiz({ onBack }) {
-  const [quizTitle, setQuizTitle] = useState('');
-  const [questions, setQuestions] = useState([
+function CreateQuiz({ onBack, existingQuiz }) {
+  const [quizTitle, setQuizTitle] = useState(existingQuiz ? existingQuiz.title : '');
+  const [questions, setQuestions] = useState(existingQuiz ? existingQuiz.questions : [
     { question: '', answers: ['', '', '', ''], correct: 0 }
   ]);
   const [currentQ, setCurrentQ] = useState(null);
@@ -75,21 +75,29 @@ function CreateQuiz({ onBack }) {
     setCurrentQ(null);
   };
 
-  const saveQuiz = async () => {
-    const quiz = { title: quizTitle, questions };
-    const res = await fetch('/api/quizzes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(quiz)
-    });
-    const data = await res.json();
-    alert(`Quiz saved! ID: ${data.id}`);
-    onBack();
-  };
+    const saveQuiz = async () => {
+        const quiz = { title: quizTitle, questions };
+        if (existingQuiz) {
+        await fetch(`/api/quizzes/${existingQuiz.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(quiz)
+        });
+        alert('Quiz updated!');
+        } else {
+        const res = await fetch('/api/quizzes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(quiz)
+        });
+        const data = await res.json();
+        alert(`Quiz saved! ID: ${data.id}`);
+        }
+        onBack();
+    };
 
   return (
     <div style={{ width: '700px', maxWidth: '100%', margin: '0 auto', padding: '1rem', boxSizing: 'border-box' }}>
-
 
       <button onClick={onBack} style={{ background: '#888', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '12px' }}>
         ← Back

@@ -71,3 +71,21 @@ app.get('/api/quizzes/:id', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// DELETE /api/quizzes/:id
+app.delete('/api/quizzes/:id', (req, res) => {
+  const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
+  const updated = quizzes.filter(q => q.id !== req.params.id);
+  fs.writeFileSync(QUIZZES_FILE, JSON.stringify(updated, null, 2));
+  res.json({ message: 'Deleted' });
+});
+
+// PUT /api/quizzes/:id — update a quiz
+app.put('/api/quizzes/:id', (req, res) => {
+  const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
+  const index = quizzes.findIndex(q => q.id === req.params.id);
+  if (index === -1) return res.status(404).json({ error: 'Quiz not found' });
+  quizzes[index] = { ...quizzes[index], ...req.body };
+  fs.writeFileSync(QUIZZES_FILE, JSON.stringify(quizzes, null, 2));
+  res.json(quizzes[index]);
+});

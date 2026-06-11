@@ -92,6 +92,7 @@ function App() {
         <QuizList
           onBack={() => setGameState('home')}
           onSelect={(quiz) => { setSelectedQuiz(quiz); setGameState('playquiz'); }}
+          onEdit={(quiz) => { setSelectedQuiz(quiz); setGameState('editquiz'); }}
         />
       )}
 
@@ -114,6 +115,13 @@ function App() {
 
       {gameState === 'results' && (
         <Results score={score} total={questions.length} onRestart={restart} />
+      )}
+
+      {gameState === 'editquiz' && (
+        <CreateQuiz
+          onBack={() => setGameState('quizlist')}
+          existingQuiz={selectedQuiz}
+        />
       )}
     </div>
   );
