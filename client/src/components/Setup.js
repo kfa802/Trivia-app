@@ -16,7 +16,8 @@ function Setup({ onStart, loading, error, onBack }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onStart(category, difficulty, amount, timeLimit);
+    const categoryName = categories.find(c => c.id === parseInt(category))?.name || 'Any';
+    onStart(category, difficulty, amount, timeLimit, categoryName);
   };
 
   return (

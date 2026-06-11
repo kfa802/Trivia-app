@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function QuizList({ onBack, onSelect, onEdit, token }) {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(null);
 
   const fetchQuizzes = () => {
     fetch('/api/quizzes', {
@@ -23,6 +24,13 @@ function QuizList({ onBack, onSelect, onEdit, token }) {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     fetchQuizzes();
+  };
+
+  const copyId = (id, e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(id);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   return (
@@ -47,6 +55,10 @@ function QuizList({ onBack, onSelect, onEdit, token }) {
             <p style={{ color: '#888', fontSize: '0.85rem', margin: '4px 0 0' }}>{quiz.questions.length} questions</p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={(e) => copyId(quiz.id, e)}
+              style={{ background: copied === quiz.id ? '#28a745' : '#1368ce', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', transition: 'background 0.2s' }}>
+              {copied === quiz.id ? 'ID Copied' : 'Share'}
+            </button>
             <button onClick={() => onEdit(quiz)}
               style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
               Edit

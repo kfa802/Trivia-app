@@ -16,11 +16,12 @@ app.use(express.json());
 
 const QUIZZES_FILE = path.join(__dirname, 'quizzes.json');
 const USERS_FILE = path.join(__dirname, 'users.json');
+const SCORES_FILE = path.join(__dirname, 'scores.json');
 
 if (!fs.existsSync(QUIZZES_FILE)) fs.writeFileSync(QUIZZES_FILE, JSON.stringify([]));
 if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify([]));
+if (!fs.existsSync(SCORES_FILE)) fs.writeFileSync(SCORES_FILE, JSON.stringify([]));
 
-// Middleware to verify JWT token
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Not logged in' });
@@ -33,7 +34,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// POST /api/register
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   const users = JSON.parse(fs.readFileSync(USERS_FILE));
@@ -48,7 +48,6 @@ app.post('/api/register', async (req, res) => {
   res.json({ token, username });
 });
 
-// POST /api/login
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const users = JSON.parse(fs.readFileSync(USERS_FILE));
@@ -60,7 +59,6 @@ app.post('/api/login', async (req, res) => {
   res.json({ token, username });
 });
 
-// GET /api/questions
 app.get('/api/questions', async (req, res) => {
   const { amount = 10, category = '', difficulty = '' } = req.query;
   try {
@@ -77,7 +75,6 @@ app.get('/api/questions', async (req, res) => {
   }
 });
 
-// GET /api/categories
 app.get('/api/categories', async (req, res) => {
   try {
     const response = await axios.get('https://opentdb.com/api_category.php');
@@ -87,7 +84,6 @@ app.get('/api/categories', async (req, res) => {
   }
 });
 
-// POST /api/quizzes — save a quiz (requires login)
 app.post('/api/quizzes', authMiddleware, (req, res) => {
   const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
   const newQuiz = { id: uuidv4(), createdBy: req.user.username, ...req.body };
@@ -96,14 +92,12 @@ app.post('/api/quizzes', authMiddleware, (req, res) => {
   res.json({ id: newQuiz.id });
 });
 
-// GET /api/quizzes — get only YOUR quizzes
 app.get('/api/quizzes', authMiddleware, (req, res) => {
   const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
   const myQuizzes = quizzes.filter(q => q.createdBy === req.user.username);
   res.json(myQuizzes);
 });
 
-// GET /api/quizzes/:id — get a quiz by id (public)
 app.get('/api/quizzes/:id', (req, res) => {
   const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
   const quiz = quizzes.find(q => q.id === req.params.id);
@@ -111,7 +105,6 @@ app.get('/api/quizzes/:id', (req, res) => {
   res.json(quiz);
 });
 
-// PUT /api/quizzes/:id — update a quiz
 app.put('/api/quizzes/:id', authMiddleware, (req, res) => {
   const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
   const index = quizzes.findIndex(q => q.id === req.params.id && q.createdBy === req.user.username);
@@ -121,12 +114,34 @@ app.put('/api/quizzes/:id', authMiddleware, (req, res) => {
   res.json(quizzes[index]);
 });
 
-// DELETE /api/quizzes/:id
 app.delete('/api/quizzes/:id', authMiddleware, (req, res) => {
   const quizzes = JSON.parse(fs.readFileSync(QUIZZES_FILE));
   const updated = quizzes.filter(q => !(q.id === req.params.id && q.createdBy === req.user.username));
   fs.writeFileSync(QUIZZES_FILE, JSON.stringify(updated, null, 2));
   res.json({ message: 'Deleted' });
+});
+
+// POST /api/scores — save a score
+app.post('/api/scores', authMiddleware, (req, res) => {
+  const scores = JSON.parse(fs.readFileSync(SCORES_FILE));
+  const newScore = {
+    id: uuidv4(),
+    username: req.user.username,
+    ...req.body,
+    date: new Date().toISOString()
+  };
+  scores.push(newScore);
+  fs.writeFileSync(SCORES_FILE, JSON.stringify(scores, null, 2));
+  res.json(newScore);
+});
+
+// GET /api/scores — get your scores
+app.get('/api/scores', authMiddleware, (req, res) => {
+  const scores = JSON.parse(fs.readFileSync(SCORES_FILE));
+  const myScores = scores
+    .filter(s => s.username === req.user.username)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  res.json(myScores);
 });
 
 app.listen(PORT, () => {

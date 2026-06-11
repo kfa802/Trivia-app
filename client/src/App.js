@@ -6,6 +6,8 @@ import CreateQuiz from './components/CreateQuiz';
 import QuizList from './components/QuizList';
 import PlayQuiz from './components/PlayQuiz';
 import Login from './components/Login';
+import ScoreHistory from './components/ScoreHistory';
+import FindQuiz from './components/FindQuiz';
 import './App.css';
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
   const [token, setToken] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [timeLimit, setTimeLimit] = useState(15);
+  const [lastGameInfo, setLastGameInfo] = useState(null);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -53,10 +56,11 @@ function App() {
     }
   };
 
-  const startGame = async (category, difficulty, amount, limit) => {
+  const startGame = async (category, difficulty, amount, limit, categoryName) => {
     setLoading(true);
     setError('');
     setTimeLimit(limit);
+    setLastGameInfo({ category: categoryName, difficulty: difficulty || 'Any', total: amount });
     try {
       const params = new URLSearchParams({ amount });
       if (category) params.append('category', category);
@@ -78,9 +82,25 @@ function App() {
     setLoading(false);
   };
 
+  const saveScore = async (finalScore) => {
+    if (!user || !token) return;
+    await fetch('/api/scores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        score: finalScore,
+        total: questions.length,
+        category: lastGameInfo?.category || 'Any',
+        difficulty: lastGameInfo?.difficulty || 'Any',
+      })
+    });
+  };
+
   const handleAnswer = (correct) => {
+    const newScore = correct ? score + 1 : score;
     if (correct) setScore((s) => s + 1);
     if (currentIndex + 1 >= questions.length) {
+      saveScore(newScore);
       setGameState('results');
     } else {
       setCurrentIndex((i) => i + 1);
@@ -101,6 +121,9 @@ function App() {
         {user && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ fontSize: '0.9rem', color: '#555' }}>Hi, {user}!</span>
+            <button onClick={() => setGameState('scores')} style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
+              My scores
+            </button>
             <button onClick={handleLogout} style={{ background: '#888', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
               Log out
             </button>
@@ -114,6 +137,10 @@ function App() {
           <button onClick={() => { setShowLogin(false); setGameState('setup'); }}>
             Play official trivia
           </button>
+          <button onClick={() => setGameState('findquiz')}
+            style={{ marginTop: '10px', background: '#1368ce' }}>
+            Play a friend's quiz
+          </button>
           <button onClick={() => requireLogin('create')}
             style={{ marginTop: '10px', background: '#28a745' }}>
             Create your own quiz
@@ -122,7 +149,6 @@ function App() {
             style={{ marginTop: '10px', background: '#e67e22' }}>
             My custom quizzes
           </button>
-
           {showLogin && !user && (
             <div style={{ marginTop: '1.5rem', borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>
               <Login onLogin={handleLogin} />
@@ -137,6 +163,13 @@ function App() {
 
       {gameState === 'create' && (
         <CreateQuiz onBack={() => setGameState('quizlist')} token={token} />
+      )}
+
+      {gameState === 'findquiz' && (
+        <FindQuiz
+          onBack={() => setGameState('home')}
+          onFound={(quiz) => { setSelectedQuiz(quiz); setGameState('playquiz'); }}
+        />
       )}
 
       {gameState === 'quizlist' && (
@@ -176,6 +209,13 @@ function App() {
 
       {gameState === 'results' && (
         <Results score={score} total={questions.length} onRestart={restart} />
+      )}
+
+      {gameState === 'scores' && (
+        <ScoreHistory
+          onBack={() => setGameState('home')}
+          token={token}
+        />
       )}
     </div>
   );
