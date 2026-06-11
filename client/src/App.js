@@ -10,6 +10,36 @@ import ScoreHistory from './components/ScoreHistory';
 import FindQuiz from './components/FindQuiz';
 import './App.css';
 
+function Particles() {
+  const orbs = [
+    { width: 600, height: 600, top: '-200px', right: '-200px', left: 'auto', bottom: 'auto', color: 'rgba(108, 99, 255, 0.25)', duration: '12s', delay: '0s' },
+    { width: 500, height: 500, bottom: '-150px', left: '-150px', top: 'auto', right: 'auto', color: 'rgba(74, 144, 217, 0.2)', duration: '15s', delay: '2s' },
+    { width: 400, height: 400, top: '30%', left: '10%', right: 'auto', bottom: 'auto', color: 'rgba(108, 99, 255, 0.15)', duration: '18s', delay: '4s' },
+    { width: 350, height: 350, top: '10%', left: '40%', right: 'auto', bottom: 'auto', color: 'rgba(74, 144, 217, 0.15)', duration: '20s', delay: '1s' },
+    { width: 300, height: 300, bottom: '20%', right: '10%', top: 'auto', left: 'auto', color: 'rgba(108, 99, 255, 0.1)', duration: '14s', delay: '3s' },
+  ];
+
+  return (
+    <>
+      {orbs.map((orb, i) => (
+        <div key={i} style={{
+          position: 'fixed',
+          width: orb.width,
+          height: orb.height,
+          top: orb.top,
+          right: orb.right,
+          bottom: orb.bottom,
+          left: orb.left,
+          background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
+          animation: `float${(i % 3) + 1} ${orb.duration} ease-in-out ${orb.delay} infinite`,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }} />
+      ))}
+    </>
+  );
+}
+
 function App() {
   const [gameState, setGameState] = useState('home');
   const [questions, setQuestions] = useState([]);
@@ -116,6 +146,8 @@ function App() {
 
   return (
     <div className="app">
+      <Particles />
+
       <nav className="navbar">
         <div className="navbar-title" onClick={() => setGameState('home')}>
           Trivia<span>Quiz</span>
@@ -142,28 +174,55 @@ function App() {
       <div className="page-content">
 
         {gameState === 'home' && (
-          <div className="card">
-            <h2>What do you want to do?</h2>
-            <button onClick={() => { setShowLogin(false); setGameState('setup'); }}>
-              Play official trivia
-            </button>
-            <button onClick={() => requireLogin('create')}
-              style={{ marginTop: '10px', background: '#28a745' }}>
-              Create your own quiz
-            </button>
-            <button onClick={() => requireLogin('quizlist')}
-              style={{ marginTop: '10px', background: '#e67e22' }}>
-              My custom quizzes
-            </button>
-            <button onClick={() => setGameState('findquiz')}
-              style={{ marginTop: '10px', background: '#1368ce' }}>
-              Play a friend's quiz
-            </button>
-            {showLogin && !user && (
-              <div style={{ marginTop: '1.5rem', borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>
-                <Login onLogin={handleLogin} />
+          <div>
+            <div className="hero-title" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <h1 style={{ color: 'white', fontSize: '2.5rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+                Welcome to TriviaQuiz
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.1rem' }}>
+                Test your knowledge, create your own quizzes and challenge your friends
+              </p>
+            </div>
+
+            <div className="card">
+              <h2>What do you want to do?</h2>
+              <button onClick={() => { setShowLogin(false); setGameState('setup'); }}
+                style={{ marginBottom: '10px', background: '#5b4fcf', letterSpacing: '0.5px' }}>
+                Play Official Trivia
+              </button>
+              <button onClick={() => requireLogin('create')}
+                style={{ marginBottom: '10px', background: '#2980b9', letterSpacing: '0.5px' }}>
+                Create Your Own Quiz
+              </button>
+              <button onClick={() => requireLogin('quizlist')}
+                style={{ marginBottom: '10px', background: '#1a6b9a', letterSpacing: '0.5px' }}>
+                My Custom Quizzes
+              </button>
+              <button onClick={() => setGameState('findquiz')}
+                style={{ background: '#0d3b6e', letterSpacing: '0.5px' }}>
+                Play a Friend's Quiz
+              </button>
+              {showLogin && !user && (
+                <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '1.5rem' }}>
+                  <Login onLogin={handleLogin} />
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '1.5rem' }}>
+              <div className="feature-card">
+                <p style={{ color: '#6c63ff', fontSize: '1.8rem', fontWeight: '700', margin: '0 0 6px' }}>4000+</p>
+                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', margin: 0 }}>Official trivia questions across 23 categories</p>
               </div>
-            )}
+              <div className="feature-card">
+                <p style={{ color: '#4a90d9', fontSize: '1.8rem', fontWeight: '700', margin: '0 0 6px' }}>Custom</p>
+                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', margin: 0 }}>Create and save your own quizzes with a timer</p>
+              </div>
+              <div className="feature-card">
+                <p style={{ color: '#4f76c4', fontSize: '1.8rem', fontWeight: '700', margin: '0 0 6px' }}>Share</p>
+                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', margin: 0 }}>Share your quiz ID and challenge your friends</p>
+              </div>
+            </div>
           </div>
         )}
 
