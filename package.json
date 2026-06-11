@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "dotenv": "^17.4.2"
   }
 }

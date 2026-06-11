@@ -4,6 +4,7 @@ function Setup({ onStart, loading, error }) {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('');
   const [difficulty, setDifficulty] = useState('');
+  const [amount, setAmount] = useState(10);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -14,13 +15,24 @@ function Setup({ onStart, loading, error }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onStart(category, difficulty);
+    onStart(category, difficulty, amount);
   };
 
   return (
     <div className="card">
-      <h2>Choose your quiz</h2>
+      <h2>Set up your quiz</h2>
       <form onSubmit={handleSubmit}>
+
+        <label>
+          Number of questions
+          <select value={amount} onChange={(e) => setAmount(e.target.value)}>
+            <option value={5}>5 questions</option>
+            <option value={10}>10 questions</option>
+            <option value={15}>15 questions</option>
+            <option value={20}>20 questions</option>
+          </select>
+        </label>
+
         <label>
           Category
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -48,6 +60,12 @@ function Setup({ onStart, loading, error }) {
         <button type="submit" disabled={loading}>
           {loading ? 'Loading...' : 'Start Quiz'}
         </button>
+
+        <button type="button" onClick={() => window.history.back()} 
+          style={{ marginTop: '10px', background: '#888' }}>
+          Back
+        </button>
+
       </form>
     </div>
   );

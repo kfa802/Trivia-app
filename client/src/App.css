@@ -175,3 +175,19 @@ button:disabled {
   color: #888;
   margin-bottom: 2rem;
 }
+
+.accordion {
+  overflow: hidden;
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

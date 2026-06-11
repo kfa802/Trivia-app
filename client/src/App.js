@@ -2,21 +2,25 @@ import React, { useState } from 'react';
 import Setup from './components/Setup';
 import Question from './components/Question';
 import Results from './components/Results';
+import CreateQuiz from './components/CreateQuiz';
+import QuizList from './components/QuizList';
+import PlayQuiz from './components/PlayQuiz';
 import './App.css';
 
 function App() {
-  const [gameState, setGameState] = useState('setup'); // 'setup' | 'playing' | 'results'
+  const [gameState, setGameState] = useState('home');
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
 
-  const startGame = async (category, difficulty) => {
+  const startGame = async (category, difficulty, amount) => {
     setLoading(true);
     setError('');
     try {
-      const params = new URLSearchParams({ amount: 10 });
+      const params = new URLSearchParams({ amount });
       if (category) params.append('category', category);
       if (difficulty) params.append('difficulty', difficulty);
 
@@ -49,7 +53,7 @@ function App() {
   };
 
   const restart = () => {
-    setGameState('setup');
+    setGameState('home');
     setQuestions([]);
     setCurrentIndex(0);
     setScore(0);
@@ -59,9 +63,45 @@ function App() {
     <div className="app">
       <h1 className="app-title">Trivia Quiz</h1>
 
+      {gameState === 'home' && (
+        <div className="card">
+          <h2>What do you want to do?</h2>
+          <button onClick={() => setGameState('setup')}>
+            Play official trivia
+          </button>
+          <button onClick={() => setGameState('create')}
+            style={{ marginTop: '10px', background: '#28a745' }}>
+            Create your own quiz
+          </button>
+          <button onClick={() => setGameState('quizlist')}
+            style={{ marginTop: '10px', background: '#e67e22' }}>
+            Play a custom quiz
+          </button>
+        </div>
+      )}
+
       {gameState === 'setup' && (
         <Setup onStart={startGame} loading={loading} error={error} />
       )}
+
+      {gameState === 'create' && (
+        <CreateQuiz onBack={() => setGameState('quizlist')} />
+      )}
+
+      {gameState === 'quizlist' && (
+        <QuizList
+          onBack={() => setGameState('home')}
+          onSelect={(quiz) => { setSelectedQuiz(quiz); setGameState('playquiz'); }}
+        />
+      )}
+
+      {gameState === 'playquiz' && (
+        <PlayQuiz
+          quiz={selectedQuiz}
+          onBack={() => setGameState('quizlist')}
+        />
+      )}
+
       {gameState === 'playing' && (
         <Question
           question={questions[currentIndex]}
@@ -71,6 +111,7 @@ function App() {
           onAnswer={handleAnswer}
         />
       )}
+
       {gameState === 'results' && (
         <Results score={score} total={questions.length} onRestart={restart} />
       )}
