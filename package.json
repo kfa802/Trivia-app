@@ -1,0 +1,12 @@
+{
+  "name": "trivia-app",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "node server/index.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
