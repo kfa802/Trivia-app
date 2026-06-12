@@ -80,23 +80,13 @@ function QuizList({ onBack, onSelect, onEdit, token }) {
         )}
 
         {quizzes.map((quiz) => (
-          <div key={quiz.id}
-            style={{
-              background: '#f9f9f9',
-              border: '2px solid #e6e6e6',
-              borderRadius: '12px',
-              padding: '1rem',
-              marginBottom: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
+        <div key={quiz.id} className="quiz-card"> 
 
             <div onClick={() => onSelect(quiz)} style={{ flex: 1, cursor: 'pointer' }}>
-              <p style={{ fontWeight: '700', margin: 0, color: '#222' }}>
+              <p style={{ fontWeight: '700', margin: 0, color: '#ffffff' }}>
                 {quiz.title || 'Untitled quiz'}
               </p>
-              <p style={{ color: '#666', fontSize: '0.85rem', margin: '4px 0 0' }}>
+              <p style={{ color: '#ffffff', fontSize: '0.85rem', margin: '4px 0 0' }}>
                 {quiz.questions.length} questions
               </p>
             </div>

@@ -342,3 +342,24 @@ button:disabled {
   from { width: 100%; }
   to { width: 0%; }
 }
+
+.quiz-card {
+  background: #765ad9;
+  border: 2px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quiz-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
