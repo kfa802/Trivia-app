@@ -17,6 +17,21 @@ function decode(str) {
   txt.innerHTML = str;
   return txt.value;
 }
+function playClick() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.frequency.value = 300;
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.1);
+  } catch (e) {}
+}
 
 function PopupQuiz() {
   const [question, setQuestion] = useState(null);
@@ -154,6 +169,12 @@ function App() {
       setToken(savedToken);
       setUser(savedUsername);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleClick = () => playClick();
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
   const handleLogin = (username, tok) => {
