@@ -2,6 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const COLORS = ['#e21b3c', '#1368ce', '#d89e00', '#26890c'];
 
+function playTick(timeLeft, timeLimit) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    const urgency = 1 - (timeLeft / timeLimit);
+    oscillator.frequency.value = 600 + (urgency * 800);
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.05 + (urgency * 0.2), ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.04);
+  } catch (e) {}
+}
+
 function PlayQuiz({ quiz, onBack }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -27,7 +44,11 @@ function PlayQuiz({ quiz, onBack }) {
       handleAnswer(-1);
       return;
     }
-    timerRef.current = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+    timerRef.current = setTimeout(() => {
+      setTimeLeft((t) => t - 1);
+      playTick(timeLeft, timeLimit);
+     
+    }, 1000);
     return () => clearTimeout(timerRef.current);
   }, [timeLeft, selected]);
 
