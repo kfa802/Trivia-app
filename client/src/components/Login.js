@@ -54,15 +54,16 @@ function Login({ onLogin }) {
           />
         </label>
         {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : isRegister ? 'Create account' : 'Log in'}
+        <button type="submit" disabled={loading}
+        style={{ background: '#6c63ff' }}>
+        {loading ? 'Loading...' : isRegister ? 'Create account' : 'Log in'}
         </button>
         <button
-          type="button"
-          onClick={() => { setIsRegister(!isRegister); setError(''); }}
-          style={{ marginTop: '10px', background: '#2f2f60' }}
+        type="button"
+        onClick={() => { setIsRegister(!isRegister); setError(''); }}
+        style={{ marginTop: '10px', background: '#26890c' }}
         >
-          {isRegister ? 'Already have an account? Log in' : "Don't have an account? Register"}
+        {isRegister ? 'Already have an account? Log in' : "Don't have an account? Register"}
         </button>
       </form>
     </div>

@@ -10,6 +10,99 @@ import ScoreHistory from './components/ScoreHistory';
 import FindQuiz from './components/FindQuiz';
 import './App.css';
 
+const POPUP_COLORS = ['#e21b3c', '#1368ce', '#d89e00', '#26890c'];
+
+function decode(str) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
+
+function PopupQuiz() {
+  const [question, setQuestion] = useState(null);
+  const [answers, setAnswers] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const fetchQuestion = async () => {
+    setLoading(true);
+    setSelected(null);
+    try {
+      const res = await fetch('/api/questions?amount=1');
+      const data = await res.json();
+      if (data && data[0]) {
+        const q = data[0];
+        const all = [...q.incorrect_answers, q.correct_answer].sort(() => Math.random() - 0.5);
+        setQuestion(q);
+        setAnswers(all);
+        setVisible(true);
+      }
+    } catch (e) {}
+    setLoading(false);
+  };
+
+  const handleAnswer = (answer) => {
+    if (selected) return;
+    setSelected(answer);
+    setTimeout(() => {
+      fetchQuestion();
+    }, 1500);
+  };
+
+  if (!visible) {
+    return (
+      <button className="popup-quiz-tab" onClick={fetchQuestion} disabled={loading}>
+        {loading ? 'Loading...' : 'Quick Question!'}
+      </button>
+    );
+  }
+
+  return (
+    <div className="popup-quiz">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+        <span style={{ color: '#a89cf7', fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Quick Question
+        </span>
+        <button onClick={() => setVisible(false)} style={{ background: 'transparent', color: 'rgba(255,255,255,0.5)', width: 'auto', padding: '2px 8px', fontSize: '1rem', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px' }}>
+          ✕
+        </button>
+      </div>
+
+      <p style={{ color: 'white', fontSize: '0.95rem', fontWeight: '600', marginBottom: '1rem', lineHeight: '1.4' }}>
+        {decode(question.question)}
+      </p>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+        {answers.map((answer, i) => {
+          let bg = POPUP_COLORS[i];
+          if (selected) {
+            if (answer === question.correct_answer) bg = '#28a745';
+            else if (answer === selected) bg = '#dc3545';
+            else bg = '#555';
+          }
+          return (
+            <button key={answer} onClick={() => handleAnswer(answer)}
+              style={{ background: bg, color: 'white', border: 'none', borderRadius: '8px', padding: '10px 8px', fontSize: '0.8rem', cursor: selected ? 'default' : 'pointer', transition: 'background 0.2s', fontWeight: '500', width: '100%' }}>
+              {decode(answer)}
+            </button>
+          );
+        })}
+      </div>
+
+      {selected && (
+        <p style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.85rem', color: selected === question.correct_answer ? '#90ee90' : '#ffb3b3', fontWeight: '600' }}>
+          {selected === question.correct_answer ? 'Correct!' : `Wrong! Answer: ${decode(question.correct_answer)}`}
+        </p>
+      )}
+
+      <button onClick={fetchQuestion} style={{ marginTop: '0.75rem', background: 'rgba(108,99,255,0.3)', border: '1px solid #6c63ff', color: 'white', padding: '8px', borderRadius: '8px', fontSize: '0.85rem', width: '100%' }}>
+        Next question
+      </button>
+    </div>
+  );
+}
+
 function Particles() {
   const orbs = [
     { width: 600, height: 600, top: '-200px', right: '-200px', left: 'auto', bottom: 'auto', color: 'rgba(108, 99, 255, 0.25)', duration: '12s', delay: '0s' },
@@ -148,6 +241,8 @@ function App() {
     <div className="app">
       <Particles />
 
+      {gameState === 'home' && <PopupQuiz />}
+
       <nav className="navbar">
         <div className="navbar-title" onClick={() => setGameState('home')}>
           Trivia<span>Quiz</span>
@@ -176,8 +271,8 @@ function App() {
         {gameState === 'home' && (
           <div>
             <div className="hero-title" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h1 style={{ color: 'white', fontSize: '2.5rem', fontWeight: '700', marginBottom: '0.5rem' }}>
-                Welcome to TriviaQuiz
+              <h1 style={{ color: 'white', fontSize: '3rem', fontWeight: '800', marginBottom: '0.5rem' }}>
+                Welcome to Trivia<span style={{ color: '#6c63ff' }}>Quiz</span>
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.1rem' }}>
                 Test your knowledge, create your own quizzes and challenge your friends
@@ -185,21 +280,21 @@ function App() {
             </div>
 
             <div className="card">
-              <h2>What Do You Want To Do?</h2>
+              <h2>What do you want to do?</h2>
               <button onClick={() => { setShowLogin(false); setGameState('setup'); }}
-                style={{ marginBottom: '12px', background: '#5b4fcf', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#e21b3c', letterSpacing: '0.5px' }}>
                 Play Official Trivia
               </button>
               <button onClick={() => requireLogin('create')}
-                style={{ marginBottom: '12px', background: '#2980b9', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#1368ce', letterSpacing: '0.5px' }}>
                 Create Your Own Quiz
               </button>
               <button onClick={() => requireLogin('quizlist')}
-                style={{ marginBottom: '12px', background: '#1a6b9a', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#d89e00', letterSpacing: '0.5px' }}>
                 My Custom Quizzes
               </button>
               <button onClick={() => setGameState('findquiz')}
-                style={{ background: '#0d3b6e', letterSpacing: '0.5px' }}>
+                style={{ background: '#26890c', letterSpacing: '0.5px' }}>
                 Play a Friend's Quiz
               </button>
               {showLogin && !user && (
