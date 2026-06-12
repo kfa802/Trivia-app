@@ -19,7 +19,7 @@ function playTick(timeLeft, timeLimit) {
   } catch (e) {}
 }
 
-function PlayQuiz({ quiz, onBack }) {
+export default function PlayQuiz({ quiz, onBack }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -44,19 +44,23 @@ function PlayQuiz({ quiz, onBack }) {
       handleAnswer(-1);
       return;
     }
+
     timerRef.current = setTimeout(() => {
       setTimeLeft((t) => t - 1);
       playTick(timeLeft, timeLimit);
-     
     }, 1000);
+
     return () => clearTimeout(timerRef.current);
   }, [timeLeft, selected]);
 
   const handleAnswer = (aIndex) => {
     if (selected !== null) return;
+
     clearTimeout(timerRef.current);
     setSelected(aIndex);
+
     if (aIndex === question.correct) setScore((s) => s + 1);
+
     setTimeout(() => {
       if (currentIndex + 1 >= quiz.questions.length) {
         setFinished(true);
@@ -68,41 +72,48 @@ function PlayQuiz({ quiz, onBack }) {
   };
 
   if (finished) {
-  const percentage = Math.round((score / quiz.questions.length) * 100);
-  const getMessage = () => {
-    if (percentage === 100) return 'Perfect score!';
-    if (percentage >= 70) return 'Great job!';
-    if (percentage >= 40) return 'Not bad!';
-    return 'Better luck next time!';
-  };
-  return (
-    <div className="card results">
-      <h2 style={{ color: 'white', fontSize: '2rem', marginBottom: '1.5rem' }}>
-        {getMessage()}
-      </h2>
-      <p style={{
-        fontSize: '4rem',
-        fontWeight: '800',
-        color: 'white',
-        textShadow: '0 0 15px rgba(108,99,255,0.5)',
-        marginBottom: '2rem',
-        lineHeight: 1
-      }}>
-        {score} / {quiz.questions.length}
-      </p>
-      <button onClick={onBack} className="btn-back" style={{ marginTop: '5px' }}>
-        Back to quizzes
-      </button>
-    </div>
-  );
-}
+    const percentage = Math.round((score / quiz.questions.length) * 100);
+
+    const getMessage = () => {
+      if (percentage === 100) return 'Perfect score!';
+      if (percentage >= 70) return 'Great job!';
+      if (percentage >= 40) return 'Not bad!';
+      return 'Better luck next time!';
+    };
+
+    return (
+      <div className="card results">
+        <h2 style={{ color: 'white', fontSize: '2rem', marginBottom: '1.5rem' }}>
+          {getMessage()}
+        </h2>
+        <p style={{
+          fontSize: '4rem',
+          fontWeight: '800',
+          color: 'white',
+          marginBottom: '2rem'
+        }}>
+          {score} / {quiz.questions.length}
+        </p>
+        <button onClick={onBack} className="btn-back">
+          Back to quizzes
+        </button>
+      </div>
+    );
+  }
 
   const timerColor = timeLeft <= 5 ? '#e53e3e' : timeLeft <= 10 ? '#e67e22' : '#28a745';
   const timerPercent = (timeLeft / timeLimit) * 100;
 
   return (
     <div className="card" style={{ maxWidth: '700px', margin: '0 auto', width: '100%' }}>
-      <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
+      <p style={{
+        fontSize: '1.1rem',
+        color: 'rgba(255,255,255,0.7)',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        marginBottom: '0.5rem',
+        fontWeight: '600'
+      }}>
         {quiz.title}
       </p>
 
@@ -112,7 +123,13 @@ function PlayQuiz({ quiz, onBack }) {
         <span style={{ fontWeight: '700', color: timerColor }}>{timeLeft}s</span>
       </div>
 
-      <div style={{ width: '100%', background: 'rgba(0,0,0,0.15)', borderRadius: '4px', height: '6px', margin: '8px 0 12px' }}>
+      <div style={{
+        width: '100%',
+        background: 'rgba(0,0,0,0.15)',
+        borderRadius: '4px',
+        height: '6px',
+        margin: '8px 0 12px'
+      }}>
         <div style={{
           width: `${timerPercent}%`,
           background: timerColor,
@@ -122,20 +139,48 @@ function PlayQuiz({ quiz, onBack }) {
         }} />
       </div>
 
-      <div style={{ background: 'rgb(255, 255, 255)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '1.3rem', margin: 0, color: '#0d1b2a' }}>{question.question}</h2>
+      {/* ✅ FIXED BOX */}
+      <div style={{
+        background: 'rgb(255,255,255)',
+        borderRadius: '12px',
+        padding: '1.5rem',
+        marginBottom: '1rem',
+        minHeight: '80px',
+        height: 'auto',
+        display: 'block'
+      }}>
+        <h2 style={{
+          textAlign: 'center',
+          fontSize: '1.3rem',
+          margin: 0,
+          color: '#0d1b2a',
+          whiteSpace: 'normal',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+          lineHeight: '1.4'
+        }}>
+          {question.question}
+        </h2>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '12px'
+      }}>
         {question.answers.filter(a => a.trim() !== '').map((answer, aIndex) => {
           let bg = COLORS[aIndex];
+
           if (selected !== null) {
             if (aIndex === question.correct) bg = '#28a745';
             else if (aIndex === selected) bg = '#dc3545';
             else bg = '#aaa';
           }
+
           return (
-            <button key={aIndex} onClick={() => handleAnswer(aIndex)}
+            <button
+              key={aIndex}
+              onClick={() => handleAnswer(aIndex)}
               style={{
                 background: bg,
                 color: 'white',
@@ -144,10 +189,11 @@ function PlayQuiz({ quiz, onBack }) {
                 padding: '20px',
                 fontSize: '1rem',
                 cursor: selected !== null ? 'default' : 'pointer',
-                transition: 'background 0.2s',
-                fontWeight: '500',
-                textAlign: 'center'
-              }}>
+                whiteSpace: 'normal',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word'
+              }}
+            >
               {answer}
             </button>
           );
@@ -156,5 +202,3 @@ function PlayQuiz({ quiz, onBack }) {
     </div>
   );
 }
-
-export default PlayQuiz;

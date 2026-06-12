@@ -54,7 +54,6 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
     timerRef.current = setTimeout(() => {
       setTimeLeft((t) => t - 1);
       playTick(timeLeft, timeLimit);
-   
     }, 1000);
     return () => clearTimeout(timerRef.current);
   }, [timeLeft, selected]);
@@ -73,7 +72,14 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
 
   return (
     <div className="card">
-      <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
+      <p style={{
+        fontSize: '1.1rem',
+        color: 'rgba(255,255,255,0.7)',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        marginBottom: '0.5rem',
+        fontWeight: '600'
+      }}>
         {decode(question.category)} — {question.difficulty}
       </p>
 
@@ -83,7 +89,13 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
         <span style={{ fontWeight: '700', color: timerColor }}>{timeLeft}s</span>
       </div>
 
-      <div style={{ width: '100%', background: 'rgba(0,0,0,0.15)', borderRadius: '4px', height: '6px', margin: '8px 0 12px' }}>
+      <div style={{
+        width: '100%',
+        background: 'rgba(0,0,0,0.15)',
+        borderRadius: '4px',
+        height: '6px',
+        margin: '8px 0 12px'
+      }}>
         <div style={{
           width: `${timerPercent}%`,
           background: timerColor,
@@ -93,11 +105,35 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
         }} />
       </div>
 
-      <div style={{ background: 'rgb(243, 243, 243)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '1.3rem', margin: 0, color: '#0d1b2a' }}>{decode(question.question)}</h2>
+      {/* ✅ FIXED CONTAINER */}
+      <div style={{
+        background: 'rgb(243, 243, 243)',
+        borderRadius: '12px',
+        padding: '1.5rem',
+        marginBottom: '1rem',
+        minHeight: '80px',
+        height: 'auto',
+        display: 'block'
+      }}>
+        <h2 style={{
+          textAlign: 'center',
+          fontSize: '1.3rem',
+          margin: 0,
+          color: '#0d1b2a',
+          whiteSpace: 'normal',
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+          lineHeight: '1.4'
+        }}>
+          {decode(question.question)}
+        </h2>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '12px'
+      }}>
         {answers.map((answer, aIndex) => {
           let bg = COLORS[aIndex];
           if (selected !== null) {
@@ -105,6 +141,7 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
             else if (answer === selected) bg = '#dc3545';
             else bg = '#aaa';
           }
+
           return (
             <button
               key={answer}
@@ -119,7 +156,10 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
                 cursor: selected !== null ? 'default' : 'pointer',
                 transition: 'background 0.2s',
                 fontWeight: '500',
-                textAlign: 'center'
+                textAlign: 'center',
+                whiteSpace: 'normal',
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word'
               }}
             >
               {decode(answer)}
