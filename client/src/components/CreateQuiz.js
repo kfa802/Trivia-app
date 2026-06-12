@@ -6,14 +6,13 @@ const LABELS = ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'];
 function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect }) {
   return (
     <div style={{
-      background: '#ffffff',
+      background: '#1e3560',
       border: '2px solid #6c63ff',
       borderRadius: '12px',
       padding: '1.2rem',
       marginBottom: '10px',
-      boxShadow: '0 6px 18px rgba(0,0,0,0.08)'
+      boxShadow: '0 6px 18px rgba(0,0,0,0.3)'
     }}>
-
       <textarea
         value={q.question}
         onChange={(e) => updateQuestion(e.target.value)}
@@ -23,10 +22,11 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
           minHeight: '90px',
           fontSize: '1.2rem',
           fontWeight: '600',
-          color: '#222',
+          color: '#1a1a2e',
+          background: 'rgba(255,255,255,0.9)',
           padding: '0.9rem',
           borderRadius: '10px',
-          border: '2px solid #ddd',
+          border: '2px solid rgba(255,255,255,0.2)',
           marginBottom: '1rem',
           resize: 'vertical',
           outline: 'none'
@@ -48,7 +48,6 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
             onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
           >
-
             <input
               type="text"
               value={answer}
@@ -59,10 +58,8 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
                 background: 'transparent',
                 border: 'none',
                 borderBottom: '2px solid rgba(255,255,255,0.5)',
-
                 color: '#fff',
-                WebkitTextFillColor: '#fff',   // 🔥 FIX THAT MAKES IT WHITE
-
+                WebkitTextFillColor: '#fff',
                 fontSize: '1.05rem',
                 fontWeight: '600',
                 padding: '6px 0',
@@ -70,7 +67,6 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
                 letterSpacing: '0.3px'
               }}
             />
-
             <label style={{
               color: 'white',
               fontSize: '0.9rem',
@@ -89,7 +85,6 @@ function QuestionEditor({ q, qIndex, updateQuestion, updateAnswer, updateCorrect
               />
               Correct answer
             </label>
-
           </div>
         ))}
       </div>
@@ -135,86 +130,57 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
   };
 
   const saveQuiz = async () => {
-  const quiz = { title: quizTitle, questions, timeLimit: Number(timeLimit) };
+    const quiz = { title: quizTitle, questions, timeLimit: Number(timeLimit) };
 
-  // VALIDATION
-  if (!questions.length) {
-    alert("You must have at least one question!");
-    return;
-  }
-
-  for (let i = 0; i < questions.length; i++) {
-    const q = questions[i];
-
-    const filledAnswers = q.answers.filter(a => a.trim() !== '');
-
-    if (!q.question.trim()) {
-      alert(`Question ${i + 1} is empty!`);
+    if (!questions.length) {
+      alert("You must have at least one question!");
       return;
     }
 
-    if (filledAnswers.length < 2) {
-      alert(`Question ${i + 1} must have at least 2 answers!`);
-      return;
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      const filledAnswers = q.answers.filter(a => a.trim() !== '');
+      if (!q.question.trim()) {
+        alert(`Question ${i + 1} is empty!`);
+        return;
+      }
+      if (filledAnswers.length < 2) {
+        alert(`Question ${i + 1} must have at least 2 answers!`);
+        return;
+      }
     }
-  }
 
-  if (existingQuiz) {
-    await fetch(`/api/quizzes/${existingQuiz.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(quiz)
-    });
-    alert('Quiz updated!');
-  } else {
-    const res = await fetch('/api/quizzes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(quiz)
-    });
-    const data = await res.json();
-    alert(`Quiz saved! ID: ${data.id}`);
-  }
+    if (existingQuiz) {
+      await fetch(`/api/quizzes/${existingQuiz.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(quiz)
+      });
+      alert('Quiz updated!');
+    } else {
+      const res = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(quiz)
+      });
+      const data = await res.json();
+      alert(`Quiz saved! ID: ${data.id}`);
+    }
 
-  onBack();
-};
+    onBack();
+  };
 
   return (
-    <div style={{
-      width: '700px',
-      maxWidth: '100%',
-      margin: '0 auto',
-      padding: '1.5rem',
-      boxSizing: 'border-box',
-      background: '#fff',
-      borderRadius: '16px',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
-    }}>
+    <div className="card" style={{ width: '700px', maxWidth: '100%', margin: '0 auto', boxSizing: 'border-box', background: '#1e3560' }}>
 
-      <h1 style={{
-        textAlign: 'center',
-        fontSize: '3rem',
-        fontWeight: '800',
-        marginBottom: '0.5rem',
-        color: '#6c63ff'
-      }}>
-        Create Quiz
-      </h1>
-
-      <p style={{
-        textAlign: 'center',
-        color: '#666',
-        marginBottom: '20px',
-        fontWeight: '500'
-      }}>
-        Create Your Own Quizzes and Share Them With Friends
-      </p>
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '0.5rem', color: 'white' }}>
+          Create Your <span style={{ color: '#6c63ff' }}>Quiz</span>
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1rem', fontWeight: '500' }}>
+          Create your own quizzes and share them with friends
+        </p>
+      </div>
 
       <input
         type="text"
@@ -225,7 +191,9 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
           width: '100%',
           padding: '14px',
           borderRadius: '10px',
-          border: '2px solid #ddd',
+          border: '1.5px solid rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.1)',
+          color: 'white',
           fontSize: '1.3rem',
           fontWeight: '600',
           marginBottom: '15px',
@@ -234,40 +202,40 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
       />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
-        <label style={{ fontSize: '0.95rem', color: '#333', fontWeight: '600' }}>
+        <label style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.8)', fontWeight: '600' }}>
           Time per question:
         </label>
-
-        <select
-          value={timeLimit}
-          onChange={(e) => setTimeLimit(e.target.value)}
-          style={{
-            padding: '8px 12px',
-            borderRadius: '8px',
-            border: '1.5px solid #ddd',
-            fontSize: '1rem',
-            cursor: 'pointer'
-          }}
-        >
-          <option value={10}>10 seconds</option>
-          <option value={15}>15 seconds</option>
-          <option value={20}>20 seconds</option>
-          <option value={30}>30 seconds</option>
-          <option value={60}>60 seconds</option>
-        </select>
+<select
+  value={timeLimit}
+  onChange={(e) => setTimeLimit(e.target.value)}
+  style={{
+    padding: '8px 12px',
+    borderRadius: '8px',
+    border: '1.5px solid rgba(255,255,255,0.2)',
+    background: '#1e3560',
+    color: 'white',
+    fontSize: '1rem',
+    cursor: 'pointer'
+  }}
+>
+  <option style={{ background: '#1e3560' }} value={10}>10 seconds</option>
+  <option style={{ background: '#1e3560' }} value={15}>15 seconds</option>
+  <option style={{ background: '#1e3560' }} value={20}>20 seconds</option>
+  <option style={{ background: '#1e3560' }} value={30}>30 seconds</option>
+  <option style={{ background: '#1e3560' }} value={60}>60 seconds</option>
+</select>
       </div>
 
       {questions.map((q, i) => (
         <div key={i}>
           <div style={{ display: 'flex', gap: '8px', marginBottom: currentQ === i ? '0' : '8px' }}>
-
             <button
               onClick={() => setCurrentQ(currentQ === i ? null : i)}
               style={{
                 flex: 1,
-                background: currentQ === i ? '#6c63ff' : '#f1f1f1',
-                color: currentQ === i ? 'white' : '#333',
-                border: 'none',
+                background: currentQ === i ? '#6c63ff' : '#1e3560',
+                color: 'white',
+                border: '1.5px solid #6c63ff',
                 padding: '18px',
                 borderRadius: '10px',
                 cursor: 'pointer',
@@ -279,7 +247,6 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
               {currentQ === i ? '▼' : '▶'} Question {i + 1}
               {q.question ? ` — ${q.question.substring(0, 40)}${q.question.length > 40 ? '...' : ''}` : ''}
             </button>
-
             <button
               onClick={() => deleteQuestion(i)}
               style={{
@@ -294,7 +261,6 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
             >
               ✕
             </button>
-
           </div>
 
           {currentQ === i && (
@@ -312,14 +278,7 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
       <button onClick={addQuestion} style={{
         width: '100%',
         marginTop: '10px',
-        background: '#6c63ff',
-        color: 'white',
-        border: 'none',
-        padding: '14px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: '600'
+        background: '#6c63ff'
       }}>
         + Add question
       </button>
@@ -327,31 +286,13 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
       <button onClick={saveQuiz} style={{
         width: '100%',
         marginTop: '10px',
-        background: '#28a745',
-        color: 'white',
-        border: 'none',
-        padding: '14px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: '700'
+        background: '#26890c'
       }}>
         Save quiz
       </button>
 
-      <button onClick={onBack} style={{
-        width: '100%',
-        marginTop: '10px',
-        background: '#2c3285',
-        color: 'white',
-        border: 'none',
-        padding: '14px',
-        borderRadius: '10px',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: '600'
-      }}>
-        ← Back
+      <button onClick={onBack} className="btn-back" style={{ marginTop: '10px' }}>
+        Back
       </button>
 
     </div>
