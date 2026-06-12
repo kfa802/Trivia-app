@@ -73,7 +73,7 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
 
   return (
     <div className="card">
-      <p style={{ fontSize: '0.8rem', color: '#3a3090', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
+      <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
         {decode(question.category)} — {question.difficulty}
       </p>
 
@@ -93,7 +93,7 @@ function Question({ question, questionNumber, total, score, onAnswer, timeLimit 
         }} />
       </div>
 
-      <div style={{ background: 'rgba(255, 255, 255, 0.43)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'rgb(243, 243, 243)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <h2 style={{ textAlign: 'center', fontSize: '1.3rem', margin: 0, color: '#0d1b2a' }}>{decode(question.question)}</h2>
       </div>
 

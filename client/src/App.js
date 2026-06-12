@@ -231,7 +231,7 @@ function App() {
   };
 
   const restart = () => {
-    setGameState('home');
+    setGameState('setup');
     setQuestions([]);
     setCurrentIndex(0);
     setScore(0);
@@ -306,7 +306,7 @@ function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '1.5rem' }}>
               <div className="feature-card">
-                <p style={{ color: '#6c63ff', fontSize: '1.8rem', fontWeight: '700', margin: '0 0 6px' }}>4000+</p>
+                <p style={{ color: '#6c63ff', fontSize: '1.8rem', fontWeight: '700', margin: '0 0 6px' }}>5000+</p>
                 <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', margin: 0 }}>Official trivia questions across 23 categories</p>
               </div>
               <div className="feature-card">
@@ -372,7 +372,7 @@ function App() {
         )}
 
         {gameState === 'results' && (
-          <Results score={score} total={questions.length} onRestart={restart} />
+          <Results score={score} total={questions.length} onRestart={restart} onBack={() => setGameState('home')} />
         )}
 
         {gameState === 'scores' && (

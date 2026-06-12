@@ -23,30 +23,28 @@ function Setup({ onStart, loading, error, onBack }) {
   return (
     <div className="card">
 
-      {/* Heading + tagline */}
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ 
+        <h2 style={{
           fontSize: '3rem',
           fontWeight: '800',
           marginBottom: '0.5rem',
-          color: '#6c63ff'
+          color: 'white'
         }}>
-          Choose Your Quiz
+          Choose Your <span style={{ color: '#6c63ff' }}>Quiz</span>
         </h2>
-
-        <p style={{ 
-          color: '#2e2648', 
+        <p style={{
+          color: 'rgba(255, 255, 255, 0.71)',
           fontSize: '1rem',
           fontWeight: '500',
           marginTop: '0'
         }}>
-          Pick category, difficulty, number of questions and generate a quiz from our API
+          Pick category, difficulty, number of questions and generate a quiz from the Open Trivia Database
         </p>
       </div>
 
       <form onSubmit={handleSubmit}>
 
-        <label style={{ fontWeight: '700' }}>
+        <label style={{ fontWeight: '700', color: 'white' }}>
           Number of questions
           <select value={amount} onChange={(e) => setAmount(e.target.value)}>
             <option value={5}>5 questions</option>
@@ -56,7 +54,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label style={{ fontWeight: '700' }}>
+        <label style={{ fontWeight: '700', color: 'white' }}>
           Time per question
           <select value={timeLimit} onChange={(e) => setTimeLimit(e.target.value)}>
             <option value={10}>10 seconds</option>
@@ -67,7 +65,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label style={{ fontWeight: '700' }}>
+        <label style={{ fontWeight: '700', color: 'white' }}>
           Category
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">Any category</option>
@@ -79,7 +77,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label style={{ fontWeight: '700' }}>
+        <label style={{ fontWeight: '700', color: 'white' }}>
           Difficulty
           <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
             <option value="">Any difficulty</option>
@@ -91,17 +89,14 @@ function Setup({ onStart, loading, error, onBack }) {
 
         {error && <p className="error">{error}</p>}
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading}
+          style={{ background: '#26890c' }}>
           {loading ? 'Loading...' : 'Start Quiz'}
         </button>
 
-        <button
-          type="button"
-          onClick={onBack}
-          style={{ marginTop: '10px', background: '#2c3285' }}
-        >
-          ← Back
-        </button>
+       <button type="button" onClick={onBack} className="btn-back">
+        Back
+       </button>
 
       </form>
     </div>

@@ -68,23 +68,41 @@ function PlayQuiz({ quiz, onBack }) {
   };
 
   if (finished) {
-    const percentage = Math.round((score / quiz.questions.length) * 100);
-    return (
-      <div className="card results">
-        <h2>{percentage === 100 ? 'Perfect!' : percentage >= 70 ? 'Great job!' : percentage >= 40 ? 'Not bad!' : 'Better luck next time!'}</h2>
-        <p className="score-display">{score} / {quiz.questions.length}</p>
-        <p className="score-percent">{percentage}%</p>
-        <button onClick={onBack}>Back to quizzes</button>
-      </div>
-    );
-  }
+  const percentage = Math.round((score / quiz.questions.length) * 100);
+  const getMessage = () => {
+    if (percentage === 100) return 'Perfect score!';
+    if (percentage >= 70) return 'Great job!';
+    if (percentage >= 40) return 'Not bad!';
+    return 'Better luck next time!';
+  };
+  return (
+    <div className="card results">
+      <h2 style={{ color: 'white', fontSize: '2rem', marginBottom: '1.5rem' }}>
+        {getMessage()}
+      </h2>
+      <p style={{
+        fontSize: '4rem',
+        fontWeight: '800',
+        color: 'white',
+        textShadow: '0 0 15px rgba(108,99,255,0.5)',
+        marginBottom: '2rem',
+        lineHeight: 1
+      }}>
+        {score} / {quiz.questions.length}
+      </p>
+      <button onClick={onBack} className="btn-back" style={{ marginTop: '5px' }}>
+        Back to quizzes
+      </button>
+    </div>
+  );
+}
 
   const timerColor = timeLeft <= 5 ? '#e53e3e' : timeLeft <= 10 ? '#e67e22' : '#28a745';
   const timerPercent = (timeLeft / timeLimit) * 100;
 
   return (
     <div className="card" style={{ maxWidth: '700px', margin: '0 auto', width: '100%' }}>
-      <p style={{ fontSize: '0.8rem', color: '#3a3090', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
+      <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem', fontWeight: '600' }}>
         {quiz.title}
       </p>
 
@@ -104,7 +122,7 @@ function PlayQuiz({ quiz, onBack }) {
         }} />
       </div>
 
-      <div style={{ background: 'rgba(255, 255, 255, 0.43)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'rgb(255, 255, 255)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <h2 style={{ textAlign: 'center', fontSize: '1.3rem', margin: 0, color: '#0d1b2a' }}>{question.question}</h2>
       </div>
 
