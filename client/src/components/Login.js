@@ -60,7 +60,7 @@ function Login({ onLogin }) {
         <button
           type="button"
           onClick={() => { setIsRegister(!isRegister); setError(''); }}
-          style={{ marginTop: '10px', background: '#888' }}
+          style={{ marginTop: '10px', background: '#2f2f60' }}
         >
           {isRegister ? 'Already have an account? Log in' : "Don't have an account? Register"}
         </button>
