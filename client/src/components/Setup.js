@@ -75,8 +75,8 @@ function Setup({ onStart, loading, error, onBack }) {
         </button>
 
         <button type="button" onClick={onBack}
-          style={{ marginTop: '10px', background: '#888' }}>
-          Back
+          style={{ marginTop: '10px', background: '#2c3285' }}>
+          ← Back
         </button>
 
       </form>

@@ -185,17 +185,17 @@ function App() {
             </div>
 
             <div className="card">
-              <h2>What do you want to do?</h2>
+              <h2>What Do You Want To Do?</h2>
               <button onClick={() => { setShowLogin(false); setGameState('setup'); }}
-                style={{ marginBottom: '10px', background: '#5b4fcf', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#5b4fcf', letterSpacing: '0.5px' }}>
                 Play Official Trivia
               </button>
               <button onClick={() => requireLogin('create')}
-                style={{ marginBottom: '10px', background: '#2980b9', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#2980b9', letterSpacing: '0.5px' }}>
                 Create Your Own Quiz
               </button>
               <button onClick={() => requireLogin('quizlist')}
-                style={{ marginBottom: '10px', background: '#1a6b9a', letterSpacing: '0.5px' }}>
+                style={{ marginBottom: '12px', background: '#1a6b9a', letterSpacing: '0.5px' }}>
                 My Custom Quizzes
               </button>
               <button onClick={() => setGameState('findquiz')}
