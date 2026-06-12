@@ -22,10 +22,31 @@ function Setup({ onStart, loading, error, onBack }) {
 
   return (
     <div className="card">
-      <h2>Set up your quiz</h2>
+
+      {/* Heading + tagline */}
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '3rem',
+          fontWeight: '800',
+          marginBottom: '0.5rem',
+          color: '#6c63ff'
+        }}>
+          Choose Your Quiz
+        </h2>
+
+        <p style={{ 
+          color: '#2e2648', 
+          fontSize: '1rem',
+          fontWeight: '500',
+          marginTop: '0'
+        }}>
+          Pick category, difficulty, number of questions and generate a quiz from our API
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit}>
 
-        <label>
+        <label style={{ fontWeight: '700' }}>
           Number of questions
           <select value={amount} onChange={(e) => setAmount(e.target.value)}>
             <option value={5}>5 questions</option>
@@ -35,7 +56,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label>
+        <label style={{ fontWeight: '700' }}>
           Time per question
           <select value={timeLimit} onChange={(e) => setTimeLimit(e.target.value)}>
             <option value={10}>10 seconds</option>
@@ -46,7 +67,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label>
+        <label style={{ fontWeight: '700' }}>
           Category
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">Any category</option>
@@ -58,7 +79,7 @@ function Setup({ onStart, loading, error, onBack }) {
           </select>
         </label>
 
-        <label>
+        <label style={{ fontWeight: '700' }}>
           Difficulty
           <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
             <option value="">Any difficulty</option>
@@ -74,8 +95,11 @@ function Setup({ onStart, loading, error, onBack }) {
           {loading ? 'Loading...' : 'Start Quiz'}
         </button>
 
-        <button type="button" onClick={onBack}
-          style={{ marginTop: '10px', background: '#2c3285' }}>
+        <button
+          type="button"
+          onClick={onBack}
+          style={{ marginTop: '10px', background: '#2c3285' }}
+        >
           ← Back
         </button>
 

@@ -34,42 +34,142 @@ function QuizList({ onBack, onSelect, onEdit, token }) {
   };
 
   return (
-    <div style={{ width: '700px', maxWidth: '100%', margin: '0 auto', padding: '1rem', boxSizing: 'border-box' }}>
-      <button onClick={onBack} style={{ background: '#888', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '12px' }}>
+    <div style={{
+      width: '700px',
+      maxWidth: '100%',
+      margin: '0 auto',
+      padding: '1.5rem',
+      boxSizing: 'border-box',
+      background: '#fff',
+      borderRadius: '16px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '80vh'
+    }}>
+
+      {/* Heading */}
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{
+          fontSize: '2.5rem',
+          fontWeight: '800',
+          marginBottom: '0.3rem',
+          color: '#6c63ff'
+        }}>
+          Your Quizzes
+        </h2>
+
+        <p style={{
+          color: '#666',
+          fontSize: '1rem',
+          fontWeight: '500'
+        }}>
+          Manage, play or share your created quizzes
+        </p>
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1 }}>
+
+        {loading && <p>Loading quizzes...</p>}
+
+        {!loading && quizzes.length === 0 && (
+          <p style={{ color: '#888' }}>
+            No quizzes saved yet! Go create one.
+          </p>
+        )}
+
+        {quizzes.map((quiz) => (
+          <div key={quiz.id}
+            style={{
+              background: '#f9f9f9',
+              border: '2px solid #e6e6e6',
+              borderRadius: '12px',
+              padding: '1rem',
+              marginBottom: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+
+            <div onClick={() => onSelect(quiz)} style={{ flex: 1, cursor: 'pointer' }}>
+              <p style={{ fontWeight: '700', margin: 0, color: '#222' }}>
+                {quiz.title || 'Untitled quiz'}
+              </p>
+              <p style={{ color: '#666', fontSize: '0.85rem', margin: '4px 0 0' }}>
+                {quiz.questions.length} questions
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={(e) => copyId(quiz.id, e)}
+                style={{
+                  background: copied === quiz.id ? '#28a745' : '#1368ce',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                {copied === quiz.id ? 'Copied' : 'Share'}
+              </button>
+
+              <button
+                onClick={() => onEdit(quiz)}
+                style={{
+                  background: '#6c63ff',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={(e) => deleteQuiz(quiz.id, e)}
+                style={{
+                  background: '#e53e3e',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+
+      </div>
+
+      {/* Bottom back button */}
+      <button
+        onClick={onBack}
+        style={{
+          marginTop: '1.5rem',
+          background: '#2c3285',
+          color: 'white',
+          border: 'none',
+          padding: '12px',
+          borderRadius: '10px',
+          cursor: 'pointer',
+          fontSize: '1rem',
+          fontWeight: '600'
+        }}
+      >
         ← Back
       </button>
 
-      <h2 style={{ marginBottom: '1rem' }}>Custom quizzes</h2>
-
-      {loading && <p>Loading quizzes...</p>}
-
-      {!loading && quizzes.length === 0 && (
-        <p style={{ color: '#888' }}>No quizzes saved yet! Go create one.</p>
-      )}
-
-      {quizzes.map((quiz) => (
-        <div key={quiz.id}
-          style={{ background: 'white', border: '1.5px solid #e0e0e0', borderRadius: '8px', padding: '1rem', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div onClick={() => onSelect(quiz)} style={{ flex: 1, cursor: 'pointer' }}>
-            <p style={{ fontWeight: '500', margin: 0 }}>{quiz.title || 'Untitled quiz'}</p>
-            <p style={{ color: '#888', fontSize: '0.85rem', margin: '4px 0 0' }}>{quiz.questions.length} questions</p>
-          </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={(e) => copyId(quiz.id, e)}
-              style={{ background: copied === quiz.id ? '#28a745' : '#1368ce', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', transition: 'background 0.2s' }}>
-              {copied === quiz.id ? 'ID Copied' : 'Share'}
-            </button>
-            <button onClick={() => onEdit(quiz)}
-              style={{ background: '#6c63ff', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
-              Edit
-            </button>
-            <button onClick={(e) => deleteQuiz(quiz.id, e)}
-              style={{ background: '#e53e3e', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
-              Delete
-            </button>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
