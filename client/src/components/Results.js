@@ -19,7 +19,7 @@ function Results({ score, total, onRestart, onBack }) {
         fontSize: '4rem',
         fontWeight: '800',
         color: 'white',
-        textShadow: '0 0 15px rgba(108,99,255,0.5)',
+        //textShadow: '0 0 15px rgba(108,99,255,0.5)',
         marginBottom: '2rem',
         lineHeight: 1
       }}>

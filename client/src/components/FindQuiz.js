@@ -60,7 +60,7 @@ function FindQuiz({ onBack, onFound }) {
 
       {error && <p style={{ color: '#ff6b6b', fontWeight: '600', marginBottom: '10px' }}>{error}</p>}
 
-      <button onClick={findQuiz} disabled={loading} style={{ background: '#26890c', marginBottom: '10px' }}>
+      <button onClick={findQuiz} disabled={loading} style={{ background: '#26890c', marginBottom: '2px' }}>
         {loading ? 'Searching...' : 'Find Quiz'}
       </button>
 

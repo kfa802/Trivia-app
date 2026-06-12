@@ -161,6 +161,7 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [timeLimit, setTimeLimit] = useState(15);
   const [lastGameInfo, setLastGameInfo] = useState(null);
+  const [playQuizReturn, setPlayQuizReturn] = useState('quizlist');
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -353,14 +354,22 @@ function App() {
         {gameState === 'findquiz' && (
           <FindQuiz
             onBack={() => setGameState('home')}
-            onFound={(quiz) => { setSelectedQuiz(quiz); setGameState('playquiz'); }}
+            onFound={(quiz) => {
+            setSelectedQuiz(quiz);
+            setPlayQuizReturn('findquiz');
+            setGameState('playquiz');
+          }}
           />
         )}
 
         {gameState === 'quizlist' && (
           <QuizList
             onBack={() => setGameState('home')}
-            onSelect={(quiz) => { setSelectedQuiz(quiz); setGameState('playquiz'); }}
+            onSelect={(quiz) => {
+            setSelectedQuiz(quiz);
+            setPlayQuizReturn('quizlist');
+            setGameState('playquiz');
+          }}
             onEdit={(quiz) => { setSelectedQuiz(quiz); setGameState('editquiz'); }}
             token={token}
           />
@@ -375,9 +384,9 @@ function App() {
         )}
 
         {gameState === 'playquiz' && (
-          <PlayQuiz
+         <PlayQuiz
             quiz={selectedQuiz}
-            onBack={() => setGameState('quizlist')}
+            onBack={() => setGameState(playQuizReturn)}
           />
         )}
 
