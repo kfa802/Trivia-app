@@ -85,7 +85,10 @@ function PlayQuiz({ quiz, onBack }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-        {question.answers.map((answer, aIndex) => {
+        {question.answers
+            .map((answer, aIndex) => ({ answer, aIndex }))
+            .filter(item => item.answer && item.answer.trim() !== '')
+            .map(({ answer, aIndex }) => {
           let bg = COLORS[aIndex];
           if (selected !== null) {
             if (aIndex === question.correct) bg = '#28a745';

@@ -231,7 +231,7 @@ function App() {
         )}
 
         {gameState === 'create' && (
-          <CreateQuiz onBack={() => setGameState('quizlist')} token={token} />
+          <CreateQuiz onBack={() => setGameState('home')} token={token} />
         )}
 
         {gameState === 'findquiz' && (
@@ -252,7 +252,7 @@ function App() {
 
         {gameState === 'editquiz' && (
           <CreateQuiz
-            onBack={() => setGameState('quizlist')}
+            onBack={() => setGameState('home')}
             existingQuiz={selectedQuiz}
             token={token}
           />

@@ -135,33 +135,55 @@ function CreateQuiz({ onBack, existingQuiz, token }) {
   };
 
   const saveQuiz = async () => {
-    const quiz = { title: quizTitle, questions, timeLimit: Number(timeLimit) };
+  const quiz = { title: quizTitle, questions, timeLimit: Number(timeLimit) };
 
-    if (existingQuiz) {
-      await fetch(`/api/quizzes/${existingQuiz.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(quiz)
-      });
-      alert('Quiz updated!');
-    } else {
-      const res = await fetch('/api/quizzes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(quiz)
-      });
-      const data = await res.json();
-      alert(`Quiz saved! ID: ${data.id}`);
+  // VALIDATION
+  if (!questions.length) {
+    alert("You must have at least one question!");
+    return;
+  }
+
+  for (let i = 0; i < questions.length; i++) {
+    const q = questions[i];
+
+    const filledAnswers = q.answers.filter(a => a.trim() !== '');
+
+    if (!q.question.trim()) {
+      alert(`Question ${i + 1} is empty!`);
+      return;
     }
 
-    onBack();
-  };
+    if (filledAnswers.length < 2) {
+      alert(`Question ${i + 1} must have at least 2 answers!`);
+      return;
+    }
+  }
+
+  if (existingQuiz) {
+    await fetch(`/api/quizzes/${existingQuiz.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(quiz)
+    });
+    alert('Quiz updated!');
+  } else {
+    const res = await fetch('/api/quizzes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(quiz)
+    });
+    const data = await res.json();
+    alert(`Quiz saved! ID: ${data.id}`);
+  }
+
+  onBack();
+};
 
   return (
     <div style={{
